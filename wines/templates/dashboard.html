@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    {% block content %}
+    <div class="container py-4">
+        <h1 class="text-center mb-4">Wine Dashboard</h1>
+    
+        <!-- Overview Stats Section -->
+        <div class="row text-center">
+            <div class="col-md-4">
+                <div class="card bg-primary text-white shadow mb-4">
+                    <div class="card-body">
+                        <h4>Total Wines</h4>
+                        <p class="display-4">{{ total_wines }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-success text-white shadow mb-4">
+                    <div class="card-body">
+                        <h4>Recent Wines</h4>
+                        <p class="display-4">{{ recent_wines|length }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-warning text-white shadow mb-4">
+                    <div class="card-body">
+                        <h4>Top Rated</h4>
+                        <p class="display-4">{{ top_rated_wines|length }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Charts Section -->
+        <div class="row my-4">
+            <div class="col-lg-6">
+                <div class="card shadow mb-4">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">Wine Types Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="wineTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card shadow mb-4">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">Average Ratings</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="ratingChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Recent Wines Section -->
+        <div class="card shadow mb-4">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Recently Added Wines</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for wine in recent_wines %}
+                    <div class="col-lg-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ wine.name }}</h5>
+                                <p class="card-text">Vintage: {{ wine.vintage_year }}</p>
+                                <p class="card-text">Type: {{ wine.type }}</p>
+                                <a href="/wine/{{ wine.id }}/" class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Wine Type Distribution Chart
+        const wineTypeCtx = document.getElementById('wineTypeChart').getContext('2d');
+        const wineTypeChart = new Chart(wineTypeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Red', 'White', 'Rose'],
+                datasets: [{
+                    label: '# of Wines',
+                    data: [{{ wine_type_counts.red|default:0 }}, {{ wine_type_counts.white|default:0 }}, {{ wine_type_counts.rose|default:0 }}],
+                    backgroundColor: ['#d9534f', '#f0ad4e', '#5bc0de'],
+                }]
+            }
+        });
+    
+        // Average Rating Chart
+        const ratingCtx = document.getElementById('ratingChart').getContext('2d');
+        const ratingChart = new Chart(ratingCtx, {
+            type: 'bar',
+            data: {
+                labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
+                datasets: [{
+                    label: 'Average Rating',
+                    data: [
+                        {{ average_ratings.1|default:0 }},
+                        {{ average_ratings.2|default:0 }},
+                        {{ average_ratings.3|default:0 }},
+                        {{ average_ratings.4|default:0 }},
+                        {{ average_ratings.5|default:0 }}
+                    ],
+                    backgroundColor: '#5cb85c',
+                }]
+            }
+        });
+    </script>
+    {% endblock %}
+</body>
+</html>

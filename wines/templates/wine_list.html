@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wine List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2DhKNQ4IjX13G9Hw5PEv7Q5OM1+glGJ9l5q8yZrqR/MKH6fYvLuyk8ml5hYQ2NyQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+            max-width: 1200px;
+        }
+
+        .wine-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .wine-header h1 {
+            font-size: 3rem;
+            color: #4A4A4A;
+            font-weight: bold;
+        }
+
+        .wine-header a {
+            background: linear-gradient(45deg, #6a1b9a, #8e24aa);
+            color: white;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .wine-header a:hover {
+            transform: scale(1.05);
+            background: linear-gradient(45deg, #8e24aa, #6a1b9a);
+        }
+
+        .wine-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .wine-card:hover {
+            transform: scale(1.03);
+        }
+
+        .wine-card img {
+            height: 450px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .wine-card-content {
+            padding: 20px;
+        }
+
+        .wine-card h5 a:hover {
+        color: #8e24aa;
+        text-decoration: underline;
+        }
+
+        .wine-card p {
+            color: #616161;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .wine-card .wine-info {
+            font-size: 0.9rem;
+            color: #757575;
+        }
+
+        .wine-card .wine-info span {
+            display: inline-block;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .wine-card .wine-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .wine-card .wine-actions a {
+            background-color: #6a1b9a;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .wine-card .wine-actions a:hover {
+            background-color: #8e24aa;
+        }
+
+        .search-bar {
+            margin: 20px 0 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-bar input {
+            width: 60%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 2px solid #6a1b9a;
+            border-radius: 25px;
+            margin-right: 10px;
+        }
+
+        .search-bar button {
+            background: linear-gradient(45deg, #6a1b9a, #8e24aa);
+            border: none;
+            padding: 12px 20px;
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .search-bar button:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .wine-header h1 {
+                font-size: 2rem;
+            }
+
+            .search-bar input {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="search-bar">
+            <form method="get" action="/">
+                <input type="text" name="q" placeholder="Search wines...">
+                <button type="submit"><i class="fas fa-search"></i> Search</button>
+            </form>
+        </div>
+
+        <div class="wine-header">
+            <h1>Discover the Best Wines</h1>
+            <a href="/wine/new/">Add New Wine <i class="fas fa-plus-circle"></i></a>
+        </div>
+
+        <div class="row">
+            {% for wine in object_list %}
+            <div class="col-md-4">
+                <div class="wine-card">
+                    <img src="{{ wine.image.url }}" alt="{{ wine.name }}">
+                    <div class="wine-card-content">
+                        <h5>
+                            <a href="/wine/{{ wine.id }}/" style="text-decoration: none; color: #6a1b9a;">
+                                {{ wine.name }}
+                            </a>
+                            <small>({{ wine.vintage_year }})</small>
+                        </h5>
+                        <p><strong>Price:</strong> {{ wine.price }}</p>
+                        <p>{{ wine.type }} | {{ wine.region }}</p>
+                        <div class="wine-info">
+                            <span>Rating: {{ wine.rating }}</span>
+                            <span>Temp: {{ wine.serving_temperature }}</span>
+                        </div>
+                        <div class="wine-actions">
+                            <a href="/wine/{{ wine.id }}/edit/">Edit</a>
+                            <a href="/wine/{{ wine.id }}/delete/">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

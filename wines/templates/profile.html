@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">My Account</h1>
+
+        <div class="main-container d-flex">
+            <!-- Sidebar -->
+            <div class="sidebar bg-light p-4">
+                <p><strong>{{ request.user.username }}</strong></p>
+                <p>{{ request.user.email }}</p>
+                <nav>
+                    <div class="nav-item mb-2"><a href="{% url 'profile' %}" class="text-dark"><i class="fas fa-tachometer-alt"></i> Dashboard</a></div>
+                    <div class="nav-item mb-2"><a href="#" class="text-dark"><i class="fas fa-shopping-bag"></i> Orders</a></div>
+                    <div class="nav-item mb-2"><a href="#" class="text-dark"><i class="fas fa-download"></i> Downloads</a></div>
+                    <div class="nav-item mb-2"><a href="#" class="text-dark"><i class="fas fa-map-marker-alt"></i> Addresses</a></div>
+                    <div class="nav-item mb-2"><a href="#" class="text-dark"><i class="fas fa-user"></i> Account details</a></div>
+                    <div class="nav-item"><a href="{% url 'logout' %}" class="text-dark"><i class="fas fa-sign-out-alt"></i> Log out</a></div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="content p-4 flex-grow-1">
+                <h2>Welcome to your account page</h2>
+                <p>Hi {{ request.user.username }}, today is a great day to check your account page. You can also check:</p>
+                <div class="button-group d-flex gap-2">
+                    <a href="#" class="btn btn-dark"><i class="fas fa-box"></i> Recent Orders</a>
+                    <a href="#" class="btn btn-dark"><i class="fas fa-map-marker-alt"></i> Addresses</a>
+                    <a href="#" class="btn btn-dark"><i class="fas fa-user"></i> Account Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>
